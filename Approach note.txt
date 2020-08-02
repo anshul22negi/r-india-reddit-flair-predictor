@@ -1,0 +1,27 @@
+Reddit Flair Prediction
+
+
+-----> This task was done as part of a set of projects for the ML and AI club of IIT Ropar
+
+The first step was to use the praw python module to access reddit posts from the subreddit “r/india”. I decided to classify the posts into 12 different
+flairs, and for each flair category I aimed at training 500 posts.
+However reddit api allowed for the download of not more than 250 posts per category and for some flair types like "[R]eddiquette", I could get only a
+few posts.
+I extracted the “body”, “title” and “flair” information for each post.
+Next step was cleaning the data which was primarily done with the functions from the re module. The text in the body was first HTML decoded
+and then converted to lowercase.Then certain special symbols were deleted from the text or replaced by space. Any stopwords found were
+deleted.
+The stopwords were taken from NLTK’s list of english stopwords
+( https://gist.github.com/sebleier/554280 ).
+
+Next the text was tokenized and padded to convert into pad sequences which were fed into the model.
+The model first had an embedding layer followed by a Conv1D and a pooling layer, followed by 2 dense layers. A bidirectional LSTM layer was
+tried instead of the convolutional layers but it gave lower accuracy.
+The model gave a 59% accuracy when trained for 20 epochs.
+Finally the prediction on the test urls was made using the model.predict function. 
+
+This was particularly time taking for me for 2 main reasons-
+1.I did not realise that the tokenizer.texts_to_sequences() function expects a list rather than a string. 
+2. The test urls given in the samplesubmission.csv file had some non reddit
+links which gave an error. Something I was only able to realise after implementing an exception handler in the loop.
+The predictions where finally stored with the urls in a csv file.
